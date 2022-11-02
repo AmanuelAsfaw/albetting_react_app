@@ -6,34 +6,43 @@ function Home() {
     const [current_game_start_at, setCurrentGameStartAt] = useState(null);
     const [next_game_start_at, setNextGameStartAt] = useState(null);
     const [nextGame, setNextGame] = useState(null);
+    const [isReady, setIsReady] = useState(true);
+    const [drawedNumber, setDrawedNumber] = useState(null);
+    const [currentDrawNumber, setCurrentDrawNumber] = useState(null);
+    const [nextGameTime, setNextGameTime] = useState(null);
+    const [nextGameTimeStart, setNextGameTimeStart] = useState(null);
+    const [currentGameDrawsList,setCurrentGameDrawsList] = useState([]);
+
+    function fetch_data() {
+        axios.get('http://127.0.0.1:8000/casher/live_draw')
+        .then((response) => {
+            console.log(response.data)
+            if(response.data.status === 200 && response.data.current_game){
+                console.log(typeof(response.data.current_game.started_at).toString().split("T"));
+                setCurrentGame(response.data.current_game)
+            }
+            if(response.data.status === 200 && response.data.next_game){
+                setNextGame(response.data.next_game)
+            }
+        })
+    }
 
     useEffect(()=>{
         console.log("useEffect")
-        axios.get('http://127.0.0.1:8000/casher/live_draw')
-            .then((response) => {
-                console.log(response.data)
-                if(response.data.status === 200 && response.data.current_game){
-                    console.log(typeof(response.data.current_game.started_at).toString().split("T"));
-                    setCurrentGame(response.data.current_game)
-                }
-                if(response.data.status === 200 && response.data.next_game){
-                    setNextGame(response.data.next_game)
-                    // console.log(nextGame)
-                }
-            })
+        fetch_data()
     },[])
 
     useEffect(()=>{
-        if(currentGame){
+        if(currentGame && currentGame.started_at){
             console.log('current game');
             const utcTimestamp = new Date()
             const time_array = currentGame.started_at.split('Z')[0].split("T")
             
             const current_datetime = new Date(time_array[0]+" "+time_array[1]);
             setCurrentGameStartAt(current_datetime);
+            setCurrentGameDrawsList(currentGame.draw_numbers);
             console.log(current_datetime);
             console.log(utcTimestamp.toUTCString())
-            // console.log(current_game_start_at)
         }
     },[currentGame])
 
@@ -44,43 +53,144 @@ function Home() {
             const next_datetime = new Date(time_array[0]+" "+time_array[1])
             setNextGameStartAt(next_datetime);
             console.log(next_datetime);
-        }
+        }        
     }, [nextGame])
+
+    useEffect(() => {
+        console.log('current_game_start_at');
+        console.log(current_game_start_at);
+        if(current_game_start_at !== null && isReady){
+            const utcTimestamp = new Date()
+            const gmtTimestamp = utcTimestamp.setHours(utcTimestamp.getHours() - 3)
+            let timeObject = new Date(current_game_start_at.getTime() + 10*1000)
+            console.log(timeObject);
+            if (timeObject > gmtTimestamp){
+                console.log('is ready ...')
+                var miliseconds = (current_game_start_at.getTime() - gmtTimestamp);
+                const timeOut = setTimeout(() => {
+                    setIsReady(false)
+                }, miliseconds)
+                return () => clearTimeout(timeOut);
+            } else{
+                setIsReady(false)
+            }
+        }
+        if(current_game_start_at !== null && !isReady && currentGame !== null){
+            const utcTimestamp = new Date()
+            const gmtTimestamp = utcTimestamp.setHours(utcTimestamp.getHours() - 3)
+            let timeObject = new Date(current_game_start_at.getTime() + 10*1000)
+            console.log(timeObject);
+            if(timeObject <= utcTimestamp){
+                console.log('Animation start...')
+                let seconds = (gmtTimestamp - current_game_start_at.getTime())/ 1000
+                let past_draw = Math.floor(seconds/3)
+                console.log(past_draw);
+                if(past_draw < 20){
+                    setDrawedNumber(past_draw)
+                    const first_draw = setTimeout(() => {
+                        console.log('past_draw..............')
+                        setDrawedNumber(past_draw)
+                    }, (seconds%3)*1000 )
+
+                    clearTimeout(first_draw)
+                }
+            }
+        }
+    }, [current_game_start_at, isReady, currentGame])
+
+    useEffect(() => {
+        console.log('next_game_start_at')
+        if(next_game_start_at !==null){
+            const utcTimestamp = new Date()
+            const gmtTimestamp = utcTimestamp.setHours(utcTimestamp.getHours() - 3)
+            let timeObject = new Date(next_game_start_at.getTime() + 1*1000)
+            var miliseconds = (timeObject - gmtTimestamp)
+            const minutes = Math.floor((miliseconds/1000)/60)
+            setNextGameTimeStart(miliseconds/1000)
+            console.log('Next game start affter '+miliseconds/1000);            
+            const timeOut = setTimeout(() => {
+                console.log('Fetch Next game ......'+timeObject)
+                console.log('Fetch Next game ...'+utcTimestamp)
+                console.log('Fetch Next game ... ..'+gmtTimestamp)
+                console.log('Fetch Next game ...')
+                console.log(next_game_start_at)
+                fetch_data()
+            }, miliseconds)
+            return () => clearTimeout(timeOut);
+        }
+
+    }, [next_game_start_at])
+
+    useEffect(() => {
+        if(nextGameTimeStart !== null)
+        {        
+            const interval = setTimeout(() => {
+                setNextGameTime(Math.floor(nextGameTimeStart))
+            }, 1000);
+        
+            return () => clearTimeout(interval);
+        }
+        
+    },[nextGameTimeStart])
+
+    useEffect(() => {
+        if(nextGameTime > 0){
+            const interval = setTimeout(() => {
+                var time = nextGameTime -1;
+                setNextGameTime(time);
+            }, 1000);
+            return () => clearTimeout(interval);
+        }
+    }, [nextGameTime])
+
+    useEffect(() => {
+        console.log('drawedNumber');
+        console.log(drawedNumber);
+        if(drawedNumber !==null && drawedNumber < 20){
+            const interval = setTimeout(() => {
+                if(currentGameDrawsList.length >= drawedNumber){
+                    setCurrentDrawNumber(currentGameDrawsList[drawedNumber])
+                }
+                var draw = drawedNumber +1;
+                setDrawedNumber(draw)
+            }, 1500);
+            return () => clearTimeout(interval);
+        }
+    }, [drawedNumber])
 
     return (
         <section className="parent">
             <section className="child_anim">
                 <div className="rnd">
-                    <div className="drawsNum">1/20</div>
+                    {
+                        isReady && (
+                            <div style={{color: 'white', fontSize: 50}}>Is Ready ....</div>
+                        )
+                    }
+            
+                    <div className="drawsNum">{drawedNumber !==null &&(
+                        drawedNumber + '/20'
+                    )}</div>
                     <div className="cube">
                         <div className="top"></div>
                         <div className="top2"></div>
                         <div>
-                            <span style={{"--i":0}}>1</span>
-                            <span style={{"--i":1}}>1</span>
-                            <span style={{"--i":2}}>77</span>
-                            <span style={{"--i":3}}>69</span>
+                            <span style={{"--i":0}}>{currentDrawNumber}</span>
+                            <span style={{"--i":1}}>{currentDrawNumber}</span>
+                            <span style={{"--i":2}}>{currentDrawNumber}</span>
+                            <span style={{"--i":3}}>{currentDrawNumber}</span>
                         </div>
                     </div>
                     <div className="gamenumber">
                         <div className="title">DRAWING GAME</div>
-                        <h1 className="cntdwn">1234</h1>
+                        <h1 className="cntdwn">{currentGame !==null ? currentGame.game_number: null}</h1>
                     </div>
                     <div className="nextgame">
                         <div className="title">NEXT GAME</div>
                         <div className="cntdwn">
-                            1:55
+                            {Math.floor(nextGameTime/60)}:{ Math.floor(nextGameTime%60)}
                         </div>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="160px" height="160px">
-                        <defs>
-                            <linearGradient id="GradientColor">
-                                <stop offset="0%" stop-color="#233329" />
-                                <stop offset="100%" stop-color="#63D471" />
-                            </linearGradient>
-                        </defs>
-                        <circle cx="80" cy="80" r="70" stroke-linecap="round" />
-                    </svg>
                 </div>
             </section>
             <section className="child">
