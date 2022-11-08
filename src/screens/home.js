@@ -7,11 +7,18 @@ function Home() {
     const [next_game_start_at, setNextGameStartAt] = useState(null);
     const [nextGame, setNextGame] = useState(null);
     const [isReady, setIsReady] = useState(true);
+    const [isFirst, setIsFirst] = useState(true);
     const [drawedNumber, setDrawedNumber] = useState(null);
     const [currentDrawNumber, setCurrentDrawNumber] = useState(null);
     const [nextGameTime, setNextGameTime] = useState(null);
     const [nextGameTimeStart, setNextGameTimeStart] = useState(null);
     const [currentGameDrawsList,setCurrentGameDrawsList] = useState([]);
+    const [loading_screen, setLoadingScreen] = useState(true);
+    const number_list = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+                        21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,
+                        41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,
+                        61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80
+                        ]
 
     function fetch_data() {
         axios.get('http://127.0.0.1:8000/casher/live_draw')
@@ -20,19 +27,26 @@ function Home() {
             if(response.data.status === 200 && response.data.current_game){
                 console.log(typeof(response.data.current_game.started_at).toString().split("T"));
                 setCurrentGame(response.data.current_game)
+                setIsReady(false)
             }
             if(response.data.status === 200 && response.data.next_game){
                 setNextGame(response.data.next_game)
+                setLoadingScreen(false)
             }
         })
     }
 
     useEffect(()=>{
-        console.log("useEffect")
-        fetch_data()
-    },[])
+        console.log('==== isFirst ===');
+        if(isFirst && nextGame === null ){
+            console.log("useEffect"+isFirst)
+            setIsFirst(false)
+            fetch_data()
+        }
+    },[isFirst])
 
     useEffect(()=>{
+        console.log('=== currentGame ===');
         if(currentGame && currentGame.started_at){
             console.log('current game');
             const utcTimestamp = new Date()
@@ -41,23 +55,28 @@ function Home() {
             const current_datetime = new Date(time_array[0]+" "+time_array[1]);
             setCurrentGameStartAt(current_datetime);
             setCurrentGameDrawsList(currentGame.draw_numbers);
-            console.log(current_datetime);
-            console.log(utcTimestamp.toUTCString())
         }
     },[currentGame])
 
     useEffect(() => {
+        console.info('=== next game ===');
         if(nextGame){
-            console.log('next game');
             const time_array = nextGame.started_at.split('Z')[0].split("T")
             const next_datetime = new Date(time_array[0]+" "+time_array[1])
-            setNextGameStartAt(next_datetime);
-            console.log(next_datetime);
+            
+            const utcTimestamp = new Date()
+            const gmtTimestamp = utcTimestamp.setHours(utcTimestamp.getHours() - 3)
+            let timeObject = new Date(next_datetime.getTime() + 10*1000)
+            var miliseconds = (timeObject - gmtTimestamp)
+            const minutes = Math.floor((miliseconds/1000)/60)
+            setNextGameStartAt(miliseconds)
+            setNextGameTime(miliseconds/1000)
         }        
     }, [nextGame])
 
     useEffect(() => {
-        console.log('current_game_start_at');
+        console.log('=== current_game_start_at isReady currentGame ===');
+        console.log(isReady);
         console.log(current_game_start_at);
         if(current_game_start_at !== null && isReady){
             const utcTimestamp = new Date()
@@ -75,15 +94,18 @@ function Home() {
                 setIsReady(false)
             }
         }
-        if(current_game_start_at !== null && !isReady && currentGame !== null){
+        if(current_game_start_at !== null && !isReady){
             const utcTimestamp = new Date()
             const gmtTimestamp = utcTimestamp.setHours(utcTimestamp.getHours() - 3)
             let timeObject = new Date(current_game_start_at.getTime() + 10*1000)
-            console.log(timeObject);
-            if(timeObject <= utcTimestamp){
+            console.log('timeObject '+ timeObject);
+            console.log('timeObject '+ gmtTimestamp.toString());
+            console.log(timeObject <= gmtTimestamp);
+            if(timeObject <= gmtTimestamp){
                 console.log('Animation start...')
-                let seconds = (gmtTimestamp - current_game_start_at.getTime())/ 1000
+                let seconds = (gmtTimestamp - current_game_start_at.getTime())/ 1000 - 10
                 let past_draw = Math.floor(seconds/3)
+                console.log(seconds);
                 console.log(past_draw);
                 if(past_draw < 20){
                     setDrawedNumber(past_draw)
@@ -91,61 +113,94 @@ function Home() {
                         console.log('past_draw..............')
                         setDrawedNumber(past_draw)
                     }, (seconds%3)*1000 )
-
-                    clearTimeout(first_draw)
+                    
+                    return () => clearTimeout(first_draw)
                 }
             }
         }
-    }, [current_game_start_at, isReady, currentGame])
+    }, [current_game_start_at, isReady])
 
     useEffect(() => {
-        console.log('next_game_start_at')
+        console.log('=== next_game_start_at ===')
+        console.log(next_game_start_at);
         if(next_game_start_at !==null){
-            const utcTimestamp = new Date()
-            const gmtTimestamp = utcTimestamp.setHours(utcTimestamp.getHours() - 3)
-            let timeObject = new Date(next_game_start_at.getTime() + 1*1000)
-            var miliseconds = (timeObject - gmtTimestamp)
-            const minutes = Math.floor((miliseconds/1000)/60)
-            setNextGameTimeStart(miliseconds/1000)
-            console.log('Next game start affter '+miliseconds/1000);            
-            const timeOut = setTimeout(() => {
-                console.log('Fetch Next game ......'+timeObject)
-                console.log('Fetch Next game ...'+utcTimestamp)
-                console.log('Fetch Next game ... ..'+gmtTimestamp)
-                console.log('Fetch Next game ...')
-                console.log(next_game_start_at)
-                fetch_data()
-            }, miliseconds)
-            return () => clearTimeout(timeOut);
+            console.log('miliseconds '+next_game_start_at);
+            // console.log('Next game start affter '+miliseconds/1000);    
+            if(next_game_start_at > 6){  
+                console.log('next_game_start_at > 6');
+                const timeOutFirst = setTimeout(() => {
+                    console.log('set loadding screen ....');
+                    setLoadingScreen(true)
+                    const timeOut = setTimeout(() => {
+                        console.log('Fetch Next game ......'+next_game_start_at)
+                        console.log('Fetch Next game ...')
+                        console.log(next_game_start_at/1000)
+                        fetch_data()
+                        setLoadingScreen(false)
+                    }, 7000)
+                    return () => clearTimeout(timeOut)
+                }, next_game_start_at - 6000) 
+                return () => clearTimeout(timeOutFirst)
+                
+            }
+            else {
+                console.log('next_game_start_at <=> 6');
+                setLoadingScreen(true)
+                console.log('loading_screen' + loading_screen);
+                const timeOut = setTimeout(() => {
+                    fetch_data()
+                    setLoadingScreen(false)
+                }, next_game_start_at + 2000)
+                return () => clearTimeout(timeOut);
+            }   
         }
 
     }, [next_game_start_at])
 
     useEffect(() => {
-        if(nextGameTimeStart !== null)
+        console.log('=== nextGameTimeStart ===');
+        if(nextGameTimeStart !== null && nextGameTimeStart > 4)
         {        
             const interval = setTimeout(() => {
-                setNextGameTime(Math.floor(nextGameTimeStart))
+                setNextGameTime(Math.floor(nextGameTimeStart) -1)
             }, 1000);
         
+            return () => clearTimeout(interval);
+        }
+        if (nextGameTimeStart <= 4){
+            // setLoadingScreen(true)
+            const interval = setTimeout(() => {
+                // setLoadingScreen(false)
+            }, nextGameTimeStart*1000);
             return () => clearTimeout(interval);
         }
         
     },[nextGameTimeStart])
 
     useEffect(() => {
-        if(nextGameTime > 0){
+        console.log('=== nextGameTime ===');
+        console.log(nextGameTime);
+        if(nextGameTime !== null && nextGameTime > 8){
             const interval = setTimeout(() => {
                 var time = nextGameTime -1;
                 setNextGameTime(time);
             }, 1000);
             return () => clearTimeout(interval);
         }
+        else if (nextGameTime <= 8){            
+            setLoadingScreen(true)
+            console.log('loading_screen');
+            console.log(loading_screen);
+            const interval = setTimeout(() => {
+                setLoadingScreen(true)
+            }, nextGameTime);
+            return () => clearTimeout(interval);
+        }
     }, [nextGameTime])
 
     useEffect(() => {
-        console.log('drawedNumber');
-        console.log(drawedNumber);
+        console.log('=== drawedNumber ===');
+        // console.log(drawedNumber);
         if(drawedNumber !==null && drawedNumber < 20){
             const interval = setTimeout(() => {
                 if(currentGameDrawsList.length >= drawedNumber){
@@ -153,20 +208,65 @@ function Home() {
                 }
                 var draw = drawedNumber +1;
                 setDrawedNumber(draw)
-            }, 1500);
+            }, 2000);
             return () => clearTimeout(interval);
         }
     }, [drawedNumber])
 
+    const LoadingScreen = () => {
+        return(
+        <div className="body">
+            <div className="logo">AL-Betting</div>
+            <div className="loadingwrapper">
+                <div class="playtext">Let's play</div>
+                <span style={{'--i':1}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':2}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':3}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':4}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':5}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':6}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':7}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':8}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':9}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+                <span style={{'--i':10}} className="upperspan">
+                    <span className="loadingbubble"></span>
+                </span>
+            </div>
+        </div>
+        )
+    }
+
     return (
+        <div>
+            {!loading_screen && (
         <section className="parent">
             <section className="child_anim">
                 <div className="rnd">
-                    {
+                    
+                    <div className="logo">AL-Betting</div>
+                    {/* {
                         isReady && (
                             <div style={{color: 'white', fontSize: 50}}>Is Ready ....</div>
                         )
-                    }
+                    } */}
             
                     <div className="drawsNum">{drawedNumber !==null &&(
                         drawedNumber + '/20'
@@ -195,90 +295,64 @@ function Home() {
             </section>
             <section className="child">
                 <div className="wrapper">
-                    <div className="box animate_start">1</div>
-                    <div className="box animate_start">2</div>
-                    <div className="box animate_start">3</div>
-                    <div className="box animate_start">4</div>
-                    <div className="box animate_start">5</div>
-                    <div className="box animate_start">6</div>
-                    <div className="box animate_start">7</div>
-                    <div className="box animate_start">8</div>
-                    <div className="box animate_start">9</div>
-                    <div className="box8 animate_start">10</div>
-                    <div className="box animate_start">11</div>
-                    <div className="box animate_start">12</div>
-                    <div className="box animate_start">13</div>
-                    <div className="box animate_start">14</div>
-                    <div className="box animate_start">15</div>
-                    <div className="box animate_start">16</div>
-                    <div className="box animate_start">17</div>
-                    <div className="box animate_start">18</div>
-                    <div className="box animate_start">19</div>
-                    <div className="box7 animate_start">20</div>
-                    <div className="box animate_start">21</div>
-                    <div className="box animate_start">22</div>
-                    <div className="box animate_start">23</div>
-                    <div className="box animate_start">24</div>
-                    <div className="box animate_start">25</div>
-                    <div className="box animate_start">26</div>
-                    <div className="box animate_start">27</div>
-                    <div className="box animate_start">28</div>
-                    <div className="box animate_start">29</div>
-                    <div className="box6 animate_start">30</div>
-                    <div className="box animate_start">31</div>
-                    <div className="box animate_start">32</div>
-                    <div className="box animate_start">33</div>
-                    <div className="box animate_start">34</div>
-                    <div className="box animate_start">35</div>
-                    <div className="box animate_start">36</div>
-                    <div className="box animate_start">37</div>
-                    <div className="box animate_start">38</div>
-                    <div className="box animate_start">39</div>
-                    <div className="box5 animate_start">40</div>
-                    <div className="box animate_start">41</div>
-                    <div className="box animate_start">42</div>
-                    <div className="box animate_start">43</div>
-                    <div className="box4 animate_start">44</div>
-                    <div className="box animate_start">45</div>
-                    <div className="box animate_start">46</div>
-                    <div className="box animate_start">47</div>
-                    <div className="box animate_start">48</div>
-                    <div className="box animate_start">49</div>
-                    <div className="box4 animate_start">50</div>
-                    <div className="box animate_start">51</div>
-                    <div className="box animate_start">52</div>
-                    <div className="box animate_start">53</div>
-                    <div className="box animate_start">54</div>
-                    <div className="box animate_start">55</div>
-                    <div className="box animate_start">56</div>
-                    <div className="box animate_start">57</div>
-                    <div className="box animate_start">58</div>
-                    <div className="box animate_start">59</div>
-                    <div className="box3 animate_start">60</div>
-                    <div className="box animate_start">61</div>
-                    <div className="box animate_start">62</div>
-                    <div className="box animate_start">63</div>
-                    <div className="box animate_start">64</div>
-                    <div className="box5 animate_start">65</div>
-                    <div className="box animate_start">66</div>
-                    <div className="box animate_start">67</div>
-                    <div className="box animate_start">68</div>
-                    <div className="box animate_start">69</div>
-                    <div className="box2 animate_start">70</div>
-                    <div className="box animate_start">71</div>
-                    <div className="box animate_start">72</div>
-                    <div className="box animate_start">73</div>
-                    <div className="box animate_start">74</div>
-                    <div className="box animate_start">75</div>
-                    <div className="box animate_start">76</div>
-                    <div className="box animate_start">77</div>
-                    <div className="box animate_start">78</div>
-                    <div className="box animate_start">79</div>
-                    <div className="box1 animate_start">80</div>
+                    {
+                        
+                        number_list.map((item ) => {
+                            if (currentGameDrawsList.length < 20){
+                                return (<div key={'numbox'+item} className="box animate_start">{item}</div>)
+                            }
+                            if(item <= 10 && currentGameDrawsList.slice(0,drawedNumber).includes(item)){
+                                return (
+                                    <div key={'numbox'+item} className="box1 animate_start">{item}</div>
+                                )
+                            }
+                            else if(item <= 20 && currentGameDrawsList.slice(0,drawedNumber).includes(item)){
+                                return (
+                                    <div key={'numbox'+item} className="box2 animate_start">{item}</div>
+                                )
+                            }
+                            else if(item <= 30 && currentGameDrawsList.slice(0,drawedNumber).includes(item)){
+                                return (
+                                    <div key={'numbox'+item} className="box3 animate_start">{item}</div>
+                                )
+                            }
+                            else if(item <= 40 && currentGameDrawsList.slice(0,drawedNumber).includes(item)){
+                                return (
+                                    <div key={'numbox'+item} className="box4 animate_start">{item}</div>
+                                )
+                            }
+                            else if(item <= 50 && currentGameDrawsList.slice(0,drawedNumber).includes(item)){
+                                return (
+                                    <div key={'numbox'+item} className="box5 animate_start">{item}</div>
+                                )
+                            }
+                            else if(item <= 60 && currentGameDrawsList.slice(0,drawedNumber).includes(item)){
+                                return (
+                                    <div key={'numbox'+item} className="box6 animate_start">{item}</div>
+                                )
+                            }
+                            else if(item <= 70 && currentGameDrawsList.slice(0,drawedNumber).includes(item)){
+                                return (
+                                    <div key={'numbox'+item} className="box7 animate_start">{item}</div>
+                                )
+                            }
+                            else if(item <= 80 && currentGameDrawsList.slice(0,drawedNumber).includes(item)){
+                                return (
+                                    <div key={'numbox'+item} className="box8 animate_start">{item}</div>
+                                )
+                            }
+                            return (
+                                <div key={'numbox'+item} className="box animate_start">{item}</div>
+                            )
+                        })
+                    }
                 </div>
             </section>
         </section>
-    )
+        )}
+        {loading_screen && LoadingScreen()}
+        </div>
+    )    
 }
 
 export default Home;

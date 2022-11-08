@@ -155,7 +155,7 @@ svg {
     color:  rgb(0, 0, 0);
     justify-content: center;
     align-items: center;
-    border-radius: 10px;
+    border-radius: 15px;
     padding: 10px;
     font-size: 300%;
     align-items: center;
@@ -168,7 +168,7 @@ svg {
     color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 1px;
+    border-radius: 15px;
     padding: 10px;
     align-items: center;
     box-shadow: 0 3px 10px rgb(0, 0, 0, 0.4);
@@ -181,7 +181,7 @@ svg {
     color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 1px;
+    border-radius: 15px;
     padding: 10px;
     align-items: center;
     box-shadow: 0 3px 10px rgb(0, 0, 0, 0.4);
@@ -193,7 +193,7 @@ svg {
     color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 1px;
+    border-radius: 15px;
     padding: 10px;
     align-items: center;
     box-shadow: 0 3px 10px rgb(0, 0, 0, 0.4);
@@ -205,19 +205,19 @@ svg {
     color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 1px;
+    border-radius: 15px;
     padding: 10px;
     align-items: center;
     box-shadow: 0 3px 10px rgb(0, 0, 0, 0.4);
 }
 
 .box5 {
-    background: #94B49F;
+    background: #3d6f4f;
     font-size: 300%;
     color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 1px;
+    border-radius: 15px;
     padding: 10px;
     align-items: center;
     box-shadow: 0 3px 10px rgb(0, 0, 0, 0.4);
@@ -229,10 +229,11 @@ svg {
     color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 1px;
+    border-radius: 15px;
     padding: 10px;
     align-items: center;
     box-shadow: 0 3px 10px rgb(0, 0, 0, 0.4);
+    box-shadow: 0 3px 10px rgba(51, 245, 67, 0.4);
 }
 
 .box7 {
@@ -253,7 +254,7 @@ svg {
     color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 1px;
+    border-radius: 15px;
     padding: 10px;
     align-items: center;
     box-shadow: 0 3px 10px rgb(0, 0, 0, 0.4);
@@ -386,4 +387,85 @@ svg {
     0 0 400px rgba(0, 255, 0, 0.8),
     0 0 500px rgba(0, 255, 0, 1);
     border-radius: 50px;
+}
+
+/*  css for loading screen */
+
+.body{
+    display: flex;
+    min-height: 100vh;
+    min-width: 205vh;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255,255,255,5);
+    opacity: .5;
+    overflow: hidden;
+}
+.loadingwrapper
+{
+    position: relative;
+    width: 400px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: cursive;
+}
+.playtext
+{
+    font-size: 70px;
+    font-family: cursive;
+}
+span.upperspan
+{
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation:  rotate 5s linear infinite;
+    animation-delay: calc(0.15s*var(--i));
+}
+@keyframes rotate{
+    0%{
+        transform: rotate(0);
+    }
+    100%{
+        transform: rotate(720deg);
+    }
+}
+.loadingbubble
+{
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: tomato;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: size 2s linear infinite;
+    animation-delay: calc(0.15s* var(--i));
+}
+@keyframes size {
+    0%{
+        filter: hue-rotate(0deg);
+    }
+    90%{
+        transform: scale(15);
+        filter: hue-rotate(360deg);
+    }
+}
+
+/* al-betting log css */
+.logo
+{
+    color: #14f900;
+    font-size: 32px;
+    box-shadow: 0 3px 10px rgb(51 245 67 / 40%);
+    border-radius: 20px;
+    text-align: center;
+    top: 20px;
+    position: absolute;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 5px;
+    padding-bottom: 8px;
 }
