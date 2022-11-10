@@ -1,3 +1,16 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif, 'Montserrat';
+}
+body{
+    width: 100%;
+    min-width: 1000px;
+    background: rebeccapurple;
+    align-items: flex-start;
+}
 .body
 {
     margin: 0;
@@ -5,7 +18,10 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Verdana, sans-serif, 'Montserrat';
 }
-
+a {
+    text-decoration: none;
+    color: white;
+}
 select
 {
     padding: 8px;
@@ -32,17 +48,21 @@ button
     padding-left: 10px;
     padding-right: 10px;
     margin: 0px;
+    /* box-shadow: 0px 10px 18px 10px #888888; */
 }
 body
 {
     background-color: #e3edf7;
     font-size: 25px;
 }
-
+.headersection {
+    width: 100vw;
+}
 .uppernavbar
 {
     /* border: solid 1px black; */
     height: 100px;
+    width: 100%;
     top :0;
     background-color: rgba(0, 0, 0, 0.638);
     color: rgb(10, 241, 164);
@@ -89,6 +109,7 @@ body
 {
     /* border: solid 1px #0b0e11; */
     background-color: rgba(0, 0, 0, 0.638);
+    background-color: #539987;
     color: white;
 }
 .report-sec-tab button
@@ -99,11 +120,16 @@ body
     border-right: solid 1px rgb(10, 241, 164);
     color: white;
     font-size: 20px;
+    margin-top: 2px;
+    margin-bottom: 5px;
+    border-radius: 0;
 }
 .report-sec-tab .active
 {
     background-color: rgb(10, 241, 164);
     color: #000;
+    box-shadow: 0px 5px 20px 10px #888888;
+    margin-left: 2px;
 }
 .balanceview
 {
