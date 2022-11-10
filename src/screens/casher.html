@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="casher.css">
+                
+        <title>Casher Panel</title>
+    </head>
+    <body>
+        <section>
+            <div class="uppernavbar">
+                <div class="logo_img">
+                    <img src="./../images/logogreen-icon.png"/>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li>Ticketing</li>
+                        <li>Result</li>
+                        <li>Report</li>
+                        <li class="active">Report</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="report-sec">
+            <div class="report-sec-tab">
+                <button class="tab" onclick="openTabs('summary_btn')" id="summary_btn">Summary</button>
+                <button class="tab" onclick="openTabs('today_btn')" id="today_btn">Today Tickets</button>
+                <button class="tab" onclick="openTabs('weekly_btn')" id="weekly_btn">This Week Tickets</button>
+                <button class="active tab" onclick="openTabs('scanner_btn')" id="scanner_btn">Scanner</button>
+            </div>
+            <div class="smmary_body report-body" id="summary_btn_body" style="display: none;">
+                <div class="balanceview">
+                    Balance: 10,000
+                </div>
+                <div class="summary-form">
+                    <div class="summary-form-upper">
+                        <div class="summary-form-upper-left">
+                            <h5>From Date</h5>
+                            <input type="date"/>
+                        </div>
+                        <div>
+                            <h5>To Date</h5>
+                            <div>
+                                <input type="date"/>
+                                <button>Get</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-form-lower">
+                        <div class="reportdate">
+                            Report Date: 20/2/2022
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <td>Start Balance</td>
+                                <td>End Balance</td>
+                                <td>Bills</td>
+                                <td>Games</td>
+                                <td>Canceled</td>
+                                <td>Redeemed</td>
+                                <td>Games</td>
+                                <td>Gain</td>
+                                <td>Loss</td>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Start Balance</td>
+                                    <td>End Balance</td>
+                                    <td>Bills</td>
+                                    <td>Games</td>
+                                    <td>Canceled</td>
+                                    <td>Redeemed</td>
+                                    <td>Games</td>
+                                    <td>Gain</td>
+                                    <td>Loss</td>
+                                </tr>
+                                <tr>
+                                    <td>Start Balance</td>
+                                    <td>End Balance</td>
+                                    <td>Bills</td>
+                                    <td>Games</td>
+                                    <td>Canceled</td>
+                                    <td>Redeemed</td>
+                                    <td>Games</td>
+                                    <td>Gain</td>
+                                    <td>Loss</td>
+                                </tr>
+                                <tr>
+                                    <td>Start Balance</td>
+                                    <td>End Balance</td>
+                                    <td>Bills</td>
+                                    <td>Games</td>
+                                    <td>Canceled</td>
+                                    <td>Redeemed</td>
+                                    <td>Games</td>
+                                    <td>Gain</td>
+                                    <td>Loss</td>
+                                </tr>
+                                <tr>
+                                    <td>Start Balance</td>
+                                    <td>End Balance</td>
+                                    <td>Bills</td>
+                                    <td>Games</td>
+                                    <td>Canceled</td>
+                                    <td>Redeemed</td>
+                                    <td>Games</td>
+                                    <td>Gain</td>
+                                    <td>Loss</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="today_tickets report-body" id="today_btn_body" style="display: none;">
+                <div class="today_gamnum">
+                    <select class="gamenum" id="gamenum">
+                        <option value="volvo">100</option>
+                        <option value="volvo">101</option>
+                        <option value="volvo">102</option>
+                        <option value="volvo">103</option>
+                        <option value="volvo">104</option>
+                        <option value="volvo">105</option>
+                        <option value="volvo">106</option>
+                        <option value="volvo">107</option>
+                        <option value="volvo">108</option>
+                        <option value="volvo">109</option>
+                        <option value="volvo">110</option>
+                        <option value="volvo">111</option>
+                        <option value="volvo">112</option>
+                        <option value="volvo">113</option>
+                        <option value="volvo">114</option>
+                        <option value="volvo">115</option>
+                        <option value="volvo">116</option>
+                        <option value="volvo">117</option>
+                        <option value="volvo">118</option>
+                        <option value="volvo">119</option>
+                        <option value="volvo">120</option>
+                        <option value="volvo">121</option>
+                        <option value="volvo">122</option>
+                        <option value="volvo">123</option>
+                        <option value="volvo">124</option>
+                        <option value="volvo">125</option>
+                        <option value="volvo">126</option>
+                        <option value="volvo">127</option>
+                        <option value="volvo">128</option>
+                        <option value="volvo">129</option>
+                        <option value="volvo">130</option>
+                        <option value="volvo">131</option>
+                        <option value="volvo">132</option>
+                        <option value="volvo">133</option>
+                        <option value="volvo">134</option>
+                        <option value="volvo">135</option>
+                    </select>
+                    <button>Get</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <td>Bill Num</td>
+                        <td>Selected Num</td>
+                        <td>Is Winner</td>
+                        <td>Odds</td>
+                        <td>Canceled</td>
+                        <td>Redeemed</td>
+                        <td>Gain</td>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>100345231</td>
+                            <td>20,23,2,3,42,23,4</td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>35</td>
+                            <td>
+                                <span style="color: red; font-weight: bold;">No</span>
+                            </td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>350 ETB</td>
+                        </tr>
+                        <tr>
+                            <td>100345231</td>
+                            <td>20,23,2,3,42,23,4</td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>35</td>
+                            <td>
+                                <span style="color: red; font-weight: bold;">No</span>
+                            </td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>350 ETB</td>
+                        </tr>
+                        <tr>
+                            <td>100345231</td>
+                            <td>20,23,2,3,42,23,4</td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>35</td>
+                            <td>
+                                <span style="color: red; font-weight: bold;">No</span>
+                            </td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>350 ETB</td>
+                        </tr>
+                        <tr>
+                            <td>100345231</td>
+                            <td>20,23,2,3,42,23,4</td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>35</td>
+                            <td>
+                                <span style="color: red; font-weight: bold;">No</span>
+                            </td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>350 ETB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="weekly_tickets report-body" id="weekly_btn_body" style="display: none;">
+                <div class="weekly_gamnum">
+                    <input type="date"/>
+                    <select class="gamenum" id="gamenum">
+                        <option value="volvo" default>All</option>
+                        <option value="volvo">100</option>
+                        <option value="volvo">101</option>
+                        <option value="volvo">102</option>
+                        <option value="volvo">103</option>
+                        <option value="volvo">104</option>
+                        <option value="volvo">105</option>
+                        <option value="volvo">106</option>
+                        <option value="volvo">107</option>
+                        <option value="volvo">108</option>
+                        <option value="volvo">109</option>
+                        <option value="volvo">110</option>
+                        <option value="volvo">111</option>
+                        <option value="volvo">112</option>
+                        <option value="volvo">113</option>
+                        <option value="volvo">114</option>
+                        <option value="volvo">115</option>
+                        <option value="volvo">116</option>
+                        <option value="volvo">117</option>
+                        <option value="volvo">118</option>
+                        <option value="volvo">119</option>
+                        <option value="volvo">120</option>
+                        <option value="volvo">121</option>
+                        <option value="volvo">122</option>
+                        <option value="volvo">123</option>
+                        <option value="volvo">124</option>
+                        <option value="volvo">125</option>
+                        <option value="volvo">126</option>
+                        <option value="volvo">127</option>
+                        <option value="volvo">128</option>
+                        <option value="volvo">129</option>
+                        <option value="volvo">130</option>
+                        <option value="volvo">131</option>
+                        <option value="volvo">132</option>
+                        <option value="volvo">133</option>
+                        <option value="volvo">134</option>
+                        <option value="volvo">135</option>
+                    </select>
+                    <button>Get</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <td>Bill Num</td>
+                        <td>Selected Num</td>
+                        <td>Is Winner</td>
+                        <td>Odds</td>
+                        <td>Canceled</td>
+                        <td>Redeemed</td>
+                        <td>Gain</td>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>100345231</td>
+                            <td>20,23,2,3,42,23,4</td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>35</td>
+                            <td>
+                                <span style="color: red; font-weight: bold;">No</span>
+                            </td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>350 ETB</td>
+                        </tr>
+                        <tr>
+                            <td>100345231</td>
+                            <td>20,23,2,3,42,23,4</td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>35</td>
+                            <td>
+                                <span style="color: red; font-weight: bold;">No</span>
+                            </td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>350 ETB</td>
+                        </tr>
+                        <tr>
+                            <td>100345231</td>
+                            <td>20,23,2,3,42,23,4</td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>35</td>
+                            <td>
+                                <span style="color: red; font-weight: bold;">No</span>
+                            </td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>350 ETB</td>
+                        </tr>
+                        <tr>
+                            <td>100345231</td>
+                            <td>20,23,2,3,42,23,4</td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>35</td>
+                            <td>
+                                <span style="color: red; font-weight: bold;">No</span>
+                            </td>
+                            <td>
+                                <span style="color: green; font-weight: bold;">Yes</span>
+                            </td>
+                            <td>350 ETB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="scanner_tickets report-body" id="scanner_btn_body">
+                <input type="text" value="1341234234234"/>
+                <div>               
+                    <div class="scannerfield draws">
+                        <label>Selected : </label>
+                        <div class="draws">
+                            <span>2</span>
+                            <span>12</span>
+                            <span>78</span>
+                            <span>2</span>
+                            <span>12</span>
+                        </div>
+                    </div>             
+                    <div class="scannerfield draws">
+                        <label>Draws : </label> 
+                        <div class="draws">
+                            <span>2</span>
+                            <span>12</span>
+                            <span>78</span>
+                            <span>2</span>
+                            <span>12</span>
+                            <span>78</span>
+                            <span>2</span>
+                            <span>12</span>
+                            <span>78</span>
+                            <span>2</span>
+                            <span>12</span>
+                            <span>78</span>
+                        </div>
+                    </div>           
+                    <div class="scannerfield">
+                        <label class="winner">Winner</label>
+                    </div>           
+                    <div class="scannerfield">
+                        <label>Game : </label> 
+                        <label>100</label>
+                    </div>             
+                    <div class="scannerfield">
+                        <label>Date : </label> 
+                        <label>22/2/2022</label>
+                    </div>            
+                    <div class="scannerfield">
+                        <label>Odd : </label> 
+                        <label>35</label>
+                    </div>             
+                    <div class="scannerfield">
+                        <label>Gain : </label> 
+                        <label>350 ETB</label>
+                    </div>    
+                </div> 
+                <div class="scannerbutton">
+                    <button>Redeeme</button>
+                    <button>Get</button>
+                </div>
+            </div>
+        </section>
+        <script>
+            function openTabs(tab_name){
+                var i;
+                var x = document.getElementsByClassName('tab');
+                for(i=0; i < x.length; i++){
+                    x[i].style['background-color'] =  'transparent'
+                    x[i].style['color'] =  'white'
+                }
+                var report_body = document.getElementsByClassName('report-body');
+                for(i=0; i < report_body.length; i++){
+                    report_body[i].style.display =  'none'
+                }
+                document.getElementById(tab_name).style['background-color'] =  'rgb(10, 241, 164)'
+                document.getElementById(tab_name).style['color'] =  'black'
+                document.getElementById(tab_name+'_body').style.display =  'block'
+            }
+        </script>
+    </body>
+</html>
