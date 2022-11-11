@@ -1,91 +1,53 @@
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import 'boxicons'
 
 function Ticketing() {
+    const [selectedNumbers, setSelectedNumbers] = useState([])
+    const max_selectedNumbers = 6
+    const numbers_list = [
+        1,2,3,4,5,6,7,8,9,10,
+        11,12,13,14,15,16,17,18,19,20,
+        21,22,23,24,25,26,27,28,29,30,
+        31,32,33,34,35,36,37,38,39,40,
+        41,42,43,44,45,46,47,48,49,50,
+        51,52,53,54,55,56,57,58,59,60,
+        61,62,63,64,65,66,67,68,69,70,
+        71,72,73,74,75,76,77,78,79,80
+    ]
+    
+    function removeFromSelectedNumbers(item){
+        if(selectedNumbers.includes(item)){
+            let newArray = selectedNumbers.slice()
+            const index = newArray.indexOf(item)
+            if(index > -1){
+                newArray.splice(index, 1)
+                setSelectedNumbers(newArray)
+            }
+        }
+    }
+
+    function addToSelectedNumbers(item){
+        if(!selectedNumbers.includes(item) && selectedNumbers.length < max_selectedNumbers){
+            let newArray = selectedNumbers.slice()
+            newArray.push(item)
+            setSelectedNumbers(newArray)
+        }
+    }
+
     return (
         <section class="parent">
             <section class="child">
                 <div class="wrapper" style={{ 'fontSize': 24}}>
-                    <div class="box1 animate_start">1</div>
-                    <div class="box animate_start">2</div>
-                    <div class="box animate_start">3</div>
-                    <div class="box animate_start">4</div>
-                    <div class="box animate_start">5</div>
-                    <div class="box animate_start">6</div>
-                    <div class="box animate_start">7</div>
-                    <div class="box animate_start">8</div>
-                    <div class="box animate_start">9</div>
-                    <div class="box animate_start">10</div>
-                    <div class="box animate_start">11</div>
-                    <div class="box animate_start">12</div>
-                    <div class="box animate_start">13</div>
-                    <div class="box animate_start">14</div>
-                    <div class="box animate_start">15</div>
-                    <div class="box animate_start">16</div>
-                    <div class="box animate_start">17</div>
-                    <div class="box animate_start">18</div>
-                    <div class="box animate_start">19</div>
-                    <div class="box animate_start">20</div>
-                    <div class="box1 animate_start">21</div>
-                    <div class="box animate_start">22</div>
-                    <div class="box animate_start">23</div>
-                    <div class="box animate_start">24</div>
-                    <div class="box animate_start">25</div>
-                    <div class="box animate_start">26</div>
-                    <div class="box animate_start">27</div>
-                    <div class="box animate_start">28</div>
-                    <div class="box1 animate_start">29</div>
-                    <div class="box animate_start">30</div>
-                    <div class="box animate_start">31</div>
-                    <div class="box animate_start">32</div>
-                    <div class="box animate_start">33</div>
-                    <div class="box animate_start">34</div>
-                    <div class="box animate_start">35</div>
-                    <div class="box animate_start">36</div>
-                    <div class="box1 animate_start">37</div>
-                    <div class="box animate_start">38</div>
-                    <div class="box animate_start">39</div>
-                    <div class="box animate_start">40</div>
-                    <div class="box animate_start">41</div>
-                    <div class="box animate_start">42</div>
-                    <div class="box animate_start">43</div>
-                    <div class="box animate_start">44</div>
-                    <div class="box animate_start">45</div>
-                    <div class="box animate_start">46</div>
-                    <div class="box animate_start">47</div>
-                    <div class="box animate_start">48</div>
-                    <div class="box animate_start">49</div>
-                    <div class="box animate_start">50</div>
-                    <div class="box animate_start">51</div>
-                    <div class="box1 animate_start">52</div>
-                    <div class="box animate_start">53</div>
-                    <div class="box animate_start">54</div>
-                    <div class="box animate_start">55</div>
-                    <div class="box animate_start">56</div>
-                    <div class="box animate_start">57</div>
-                    <div class="box animate_start">58</div>
-                    <div class="box1 animate_start">59</div>
-                    <div class="box animate_start">60</div>
-                    <div class="box animate_start">61</div>
-                    <div class="box animate_start">62</div>
-                    <div class="box animate_start">63</div>
-                    <div class="box animate_start">64</div>
-                    <div class="box animate_start">65</div>
-                    <div class="box1 animate_start">66</div>
-                    <div class="box animate_start">67</div>
-                    <div class="box animate_start">68</div>
-                    <div class="box animate_start">69</div>
-                    <div class="box animate_start">70</div>
-                    <div class="box animate_start">71</div>
-                    <div class="box animate_start">72</div>
-                    <div class="box animate_start">73</div>
-                    <div class="box animate_start">74</div>
-                    <div class="box animate_start">75</div>
-                    <div class="box1 animate_start">76</div>
-                    <div class="box animate_start">77</div>
-                    <div class="box animate_start">78</div>
-                    <div class="box animate_start">79</div>
-                    <div class="box animate_start">80</div>
+                    {numbers_list.map( (item) => {
+                        if(selectedNumbers.includes(item)){
+                            return(
+                                <div class="box1 animate_start" onClick={()=> {removeFromSelectedNumbers(item)}}>{item}</div>
+                            )
+                        }
+                        return(
+                            <div class="box animate_start" onClick={() => {addToSelectedNumbers(item)}}>{item}</div>
+                        )
+                    })}
                 </div>
             </section>
             <section class="table_view">
