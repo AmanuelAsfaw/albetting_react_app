@@ -196,3 +196,6 @@ td {
     align-items: center;
     box-shadow: 0 3px 10px rgb(0, 0, 0, 0.4);
 }
+.slip_view .card p button {
+    border-radius: 0;
+}
