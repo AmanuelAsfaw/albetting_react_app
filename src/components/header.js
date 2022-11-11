@@ -11,7 +11,9 @@ function Header() {
         <section className="headersection">
             <div className="uppernavbar">
                 <div className="logo_img">
-                    <img src={logo}/>
+                    <Link to={'/'}>
+                        <img src={logo}/>
+                    </Link>
                 </div>
                 <div className="right-nav">
                     <ul>
@@ -19,10 +21,10 @@ function Header() {
                             <Link className={navLink === 'home'?"active":''} to={'/casher'} onClick={() => { setNavLink('home') }}>Ticketing</Link>
                         </li>
                         <li>
-                            <Link className={navLink === 'result'?"active":''} to={'/casher/result'} onClick={() => { setNavLink('result') }}>Result</Link>
+                            <Link className={navLink === 'report'?"active":''} to={'/casher/report'} onClick={() => { setNavLink('report') }}>Report</Link>
                         </li>
                         <li>
-                            <Link className={navLink === 'report'?"active":''} to={'/casher/report'} onClick={() => { setNavLink('report') }}>Report</Link>
+                            <Link className={navLink === 'result'?"active":''} to={'/'} onClick={() => { setNavLink('result') }}>Game</Link>
                         </li>
                     </ul>
                 </div>
