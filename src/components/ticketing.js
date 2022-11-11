@@ -1,8 +1,11 @@
 import { Fragment, useState } from "react"
 import 'boxicons'
+import axios from "axios"
 
 function Ticketing() {
     const [selectedNumbers, setSelectedNumbers] = useState([])
+    const [betSlip, setBetSlip] = useState(null)
+
     const max_selectedNumbers = 6
     const numbers_list = [
         1,2,3,4,5,6,7,8,9,10,
@@ -47,7 +50,7 @@ function Ticketing() {
     }
 
     function TableDisplay({length}){
-        if(length == 1){
+        if(length === 1){
             return (
                 <tr>
                     <td>{length}</td>
@@ -55,7 +58,7 @@ function Ticketing() {
                 </tr>
             )
         }
-        else if(length == 2){
+        else if(length === 2){
             return (
                 <tr>
                     <td>{length}</td>
@@ -63,7 +66,7 @@ function Ticketing() {
                 </tr>
             )
         }
-        else if(length == 3){
+        else if(length === 3){
             return (
                 <Fragment>
                     <tr>
@@ -77,7 +80,7 @@ function Ticketing() {
                 </Fragment>
             )
         }
-        else if(length == 4){
+        else if(length === 4){
             return (
                 <Fragment>
                     <tr>
@@ -95,7 +98,7 @@ function Ticketing() {
                 </Fragment>
             )
         }
-        else if(length == 5){
+        else if(length === 5){
             return (
                 <Fragment>
                     <tr>
@@ -117,7 +120,7 @@ function Ticketing() {
                 </Fragment>
             )
         }
-        else if(length == 6){
+        else if(length === 6){
             return (
                 <Fragment>
                     <tr>
@@ -139,7 +142,7 @@ function Ticketing() {
                 </Fragment>
             )
         }
-        else if(length == 7){
+        else if(length === 7){
             return (
                 <Fragment>
                     <tr>
@@ -165,7 +168,7 @@ function Ticketing() {
                 </Fragment>
             )
         }
-        else if(length == 8){
+        else if(length === 8){
             return (
                 <Fragment>
                     <tr>
@@ -191,7 +194,7 @@ function Ticketing() {
                 </Fragment>
             )
         }
-        else if(length == 9){
+        else if(length === 9){
             return (
                 <Fragment>
                     <tr>
@@ -221,7 +224,7 @@ function Ticketing() {
                 </Fragment>
             )
         }
-        else if(length == 10){
+        else if(length === 10){
             return (
                 <Fragment>
                     <tr>
@@ -266,6 +269,26 @@ function Ticketing() {
             )
         }
     }
+
+    function AddToBetSlip(){
+        setBetSlip(null)
+        if(selectedNumbers.length > 0){            
+            axios.post('http://127.0.0.1:8000/casher/add_bill',
+                {
+                    "game_id": 200,
+                    "selected_numbers" : selectedNumbers
+                }
+            )
+            .then((response) => {
+                setBetSlip(response.data)
+            })
+            .catch(error => {
+                console.log('AddToBetSlip error catch');
+                console.error(error);
+            })
+        }
+    }
+
     return (
         <section className="parent">
             <section className="child">
@@ -297,7 +320,7 @@ function Ticketing() {
                     <TableDisplay length={selectedNumbers.length}/>
                     <th colSpan="2">HITS <span className="pnts">POINTS</span></th>
                 </table>
-                <div className="addbetbtn">
+                <div className="addbetbtn" onClick={()=> {AddToBetSlip()}}>
                     <span className="cleartxt" style={{'display': 'flex', 'justifyContent' : 'center', 'fontSize': 17}}>ADD TO BET SLIP
                         <box-icon name="printer" color="white" style={{'marginLeft':5}} size={'20px'}></box-icon>
                     </span>
