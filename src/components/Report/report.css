@@ -102,7 +102,9 @@ td {
     text-align: center;
     font-family: arial;
 }
-
+.printcard{
+    background-color: #fff;
+}
 .price {
     color: red;
     font-size: 22px;
@@ -204,4 +206,11 @@ td {
 }
 .slip_view .card p button {
     border-radius: 0;
+}
+.barcode {
+    position: relative;
+    width: 90%;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-inline-end: 5px;
 }

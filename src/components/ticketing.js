@@ -1,10 +1,13 @@
 import { Fragment, useState } from "react"
 import 'boxicons'
 import axios from "axios"
+import { useBarcode } from 'next-barcode'
 
 function Ticketing() {
     const [selectedNumbers, setSelectedNumbers] = useState([])
     const [betSlip, setBetSlip] = useState(null)
+    const [stake, setStake] = useState(10)
+    const [ticketNumber, setTicketNumber] = useState(null)
 
     const max_selectedNumbers = 6
     const numbers_list = [
@@ -288,6 +291,30 @@ function Ticketing() {
             })
         }
     }
+    function getMaximumPayout(length){
+        if(length > 0){
+            return stake * numberWithOdd[length]
+        }
+        return 0
+    }
+    function getMinimumPayout(length){
+        if(length === 1 || length === 2){
+            return stake * numberWithOdd[length]
+        }
+        else if(length === 3 || length === 4 || length === 4){
+            return stake * numberWithOdd[2]
+        }
+        else if(length === 6){
+            return stake * numberWithOdd[3]
+        }
+        return 0
+    }
+    const { inputRef } = useBarcode({
+        value: ticketNumber !== null && ticketNumber.length > 0 ? ticketNumber:'Al-Betting',
+        options: {
+            background: '#ffffff',
+        }
+    })
 
     return (
         <section className="parent">
@@ -328,6 +355,7 @@ function Ticketing() {
             </section>
             <section className="slip_view">
                 <div className="card">
+                    <div className="printcard">
                     <p id="date"></p>
                     <p className="branch">JEMO1</p>
                     <p className="cashier_name">USER1</p>
@@ -337,14 +365,14 @@ function Ticketing() {
                     <p className="numbers">{
                         selectedNumbers.map((item) => item + ' ')
                     }</p>
-                    <form method="post" action="#">
-                        <label htmlFor="currency-field">Enter Amount</label>
-                        <input type="text" name="currency-field" id="currency-field" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
-                            value="" data-type="currency" placeholder="$10"/>
-                    </form>
-                    <p className="price"><span className="pricedescrp">STAKE</span>  $10</p>
-                    <p className="price"><span className="pricedescrp">MAX PAYOUT</span>  $1119.99</p>
-                    <p className="price"><span className="pricedescrp">MIN PAYOUT</span>  $19.99</p>
+                    <p className="price"><span className="pricedescrp">STAKE</span> {stake} ETB</p>
+                    <p className="price"><span className="pricedescrp">MIN PAYOUT</span>  {getMinimumPayout(selectedNumbers.length)} ETB</p>
+                    <p className="price"><span className="pricedescrp">MAX PAYOUT</span>  {getMaximumPayout(selectedNumbers.length)} ETB</p>
+                    <svg ref={inputRef} className="barcode"/>
+                    </div>
+                    <label htmlFor="currency-field">Enter Amount</label>
+                    <input type="number" name="currency-field" id="currency-field" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+                        value={stake} data-type="currency" placeholder="$10" onChange={(e) => {setStake(e.target.value)}}/>
                     <p><button style={{'display': 'flex', 'justifyContent' : 'center'}}>
                         PRINT
                         <box-icon name="printer" color="white" style={{'marginLeft':10}}></box-icon>
