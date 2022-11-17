@@ -2,6 +2,7 @@ import { Fragment, useState } from "react"
 import 'boxicons'
 import axios from "axios"
 import { useBarcode } from 'next-barcode'
+import { Barcode, Br, Cut, Line, Printer, render, Row, Text } from "react-thermal-printer"
 
 function Ticketing() {
     const [selectedNumbers, setSelectedNumbers] = useState([])
@@ -315,6 +316,52 @@ function Ticketing() {
             background: '#ffffff',
         }
     })
+
+    const PrintData  = async() => await render(
+        <Printer type='epson'>
+            <Text>Hello World</Text>
+        </Printer>
+    )
+
+    const Data  = async() => await render(
+        <Printer type='epson'>
+            <Text align='right'>JEMO1</Text>
+            <Text align='right'>USER1</Text>
+            <Text align='left'>GAME NUMBER : 123</Text>
+            <Text align='left'>TICKET NUMBER :12347686397486389</Text>
+            <Text align='left'>SELECTED NUMBERS</Text>
+            <Text align='center'>{
+                        selectedNumbers.map((item) => item + ' ')
+                    }</Text>
+            <Text align='center'>STAKE {stake} ETB</Text>
+            <Br/>
+            <Line />
+            <Row
+            left={<Text>MIN PAYOUT</Text>}
+            right={getMinimumPayout(selectedNumbers.length) + 'ETB'}
+            />
+            <Line />
+            <Row
+            left={<Text>MAX PAYOUT</Text>}
+            right={getMaximumPayout(selectedNumbers.length) + 'ETB'}
+            />
+            <Line />
+            <Barcode type="UPC-A" content={ticketNumber !== null && ticketNumber.length > 0 ? ticketNumber:'Al-Betting'} />
+            <Br/>
+            <Cut/>
+        </Printer>
+    )
+
+    async function thermalPrinter() {
+        const port = await window.navigator.serial.requestPort();
+        await port.open({ baudRate: 9600 });
+
+        const writer = port.writable?.getWriter();
+        if (writer != null) {
+            await writer.write(Data);
+            writer.releaseLock();
+        }
+    }
 
     return (
         <section className="parent">
