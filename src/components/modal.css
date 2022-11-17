@@ -1,0 +1,68 @@
+.modal 
+{
+    position: fixed;
+    background-color: aquamarine;
+    width: 65%;
+    margin-left: 100px;
+    margin-top: 70px;
+    margin-right: 200px;
+}
+.modalheader
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 5px 15px;
+    border-bottom: solid 1px #234;
+}
+.modalheader button
+{
+    width: 30px;
+    height: 30px;
+    font-size: smaller;
+    font-weight: bold;
+    color: red;
+    border-radius: 50%;
+    border-bottom: solid 1px #234;
+}
+.modalbody
+{
+    padding: 10px 10px;
+    margin: 20px 20px;
+    border: solid 1px rgba(0, 0, 0, 0.357);
+    border-radius: 10px;
+    background-color: aliceblue;
+}
+
+.modalbody .scannerbutton{
+    display: flex;
+    justify-content: flex-end;
+}
+.modalbody .winner{
+    color: green;
+    font-weight: bold;
+}
+.modalbody .draws
+{
+    display: flex;
+    align-items: center;
+}
+.modalbody .draws span {
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background-color: white;
+    text-align: center;
+    align-items: center;
+    margin-left: 5px;
+    font-size: 15px;
+}
+.modalbody button 
+{
+    margin-left: 20px;
+}
+.slecteddraws
+{
+    display: flex;
+}
