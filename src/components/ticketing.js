@@ -8,7 +8,15 @@ function Ticketing() {
     const [selectedNumbers, setSelectedNumbers] = useState([])
     const [betSlip, setBetSlip] = useState(null)
     const [stake, setStake] = useState(10)
-    const [ticketNumber, setTicketNumber] = useState(null)
+    const [ticketNumber, setTicketNumber] = useState("12347686397486389")
+    const [gameNumber, setGameNumber] = useState("123")
+    const [minPayOut, setMinPayOut] = useState("")
+    const [maxPayOut, setMaxPayOut] = useState("")
+    const [date, setDate] = useState(Date.now().toString())
+    const [casher, setCasher] = useState("USER1")
+    const [branch, setBranch] = useState("JEMO1")
+    const [odd, setOdd] = useState(3.5)
+    const [PrinterUrl, setPrinterUrl] = useState("")
 
     const max_selectedNumbers = 6
     const numbers_list = [
@@ -294,18 +302,22 @@ function Ticketing() {
     }
     function getMaximumPayout(length){
         if(length > 0){
+            // setMaxPayOut(stake * numberWithOdd[length])
             return stake * numberWithOdd[length]
         }
         return 0
     }
     function getMinimumPayout(length){
         if(length === 1 || length === 2){
+            // setMinPayOut(stake * numberWithOdd[length])
             return stake * numberWithOdd[length]
         }
         else if(length === 3 || length === 4 || length === 4){
+            // setMinPayOut(stake * numberWithOdd[2])
             return stake * numberWithOdd[2]
         }
         else if(length === 6){
+            // setMinPayOut(stake * numberWithOdd[3])
             return stake * numberWithOdd[3]
         }
         return 0
@@ -363,6 +375,16 @@ function Ticketing() {
         }
     }
 
+    async function sample_printer(event) {
+        
+        event.preventDefault()
+        var url_ = "albetprt:game="+gameNumber+"&ticket="+ticketNumber+"&stack="+stake
+            +"&minpay="+getMinimumPayout(selectedNumbers.length)+"&maxpay="+getMaximumPayout(selectedNumbers.length)+"&date="+date+"&casher="+casher
+            +"&branch="+branch+"&odd="+odd+"?"+ selectedNumbers.join("&");
+        console.log(url_);
+        event.preventDefault()
+        
+    }
     return (
         <section className="parent">
             <section className="child">
@@ -404,13 +426,13 @@ function Ticketing() {
                 <div className="card">
                     <div className="printcard">
                     <p id="date"></p>
-                    <p className="branch">JEMO1</p>
-                    <p className="cashier_name">USER1</p>
-                    <p className="gamenumber">GAME NUMBER : <span className="spacetxt"> 123</span></p>
-                    <p className="ticket_number">TICKET NUMBER :12347686397486389</p>
+                    <p className="branch">{branch}</p>
+                    <p className="cashier_name">{casher}</p>
+                    <p className="gamenumber">GAME NUMBER : <span className="spacetxt"> {gameNumber}</span></p>
+                    <p className="ticket_number">TICKET NUMBER :{ticketNumber}</p>
                     <p className="ticket_number">SELECTED NUMBERS</p>
                     <p className="numbers">{
-                        selectedNumbers.map((item) => item + ' ')
+                        selectedNumbers.map((item) => item + ' ') + '   X'+odd
                     }</p>
                     <p className="price"><span className="pricedescrp">STAKE</span> {stake} ETB</p>
                     <p className="price"><span className="pricedescrp">MIN PAYOUT</span>  {getMinimumPayout(selectedNumbers.length)} ETB</p>
@@ -420,7 +442,10 @@ function Ticketing() {
                     <label htmlFor="currency-field">Enter Amount</label>
                     <input type="number" name="currency-field" id="currency-field" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
                         value={stake} data-type="currency" placeholder="$10" onChange={(e) => {setStake(e.target.value)}}/>
-                    <p><button style={{'display': 'flex', 'justifyContent' : 'center'}}>
+                    <p><button style={{'display': 'flex', 'justifyContent' : 'center'}} onClick={(event) => {
+                        //thermalPrinter()
+                        sample_printer(event)
+                        }}>
                         PRINT
                         <box-icon name="printer" color="white" style={{'marginLeft':10}}></box-icon>
                     </button></p>
