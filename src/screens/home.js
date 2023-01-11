@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import MainUrl from '../constants';
 import './home.css';
 function Home() {
     const [currentGame, setCurrentGame] = useState(null);
@@ -21,7 +22,7 @@ function Home() {
                         ]
 
     function fetch_data() {
-        axios.get('http://127.0.0.1:8000/casher/live_draw')
+        axios.get(MainUrl+'casher/live_draw')
         .then((response) => {
             console.log(response.data)
             if(response.data.status === 200 && response.data.current_game){
