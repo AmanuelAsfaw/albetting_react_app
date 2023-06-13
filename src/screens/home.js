@@ -67,8 +67,9 @@ function Home() {
             
             const utcTimestamp = new Date()
             const gmtTimestamp = utcTimestamp.setHours(utcTimestamp.getHours() - 3)
+
             let timeObject = new Date(next_datetime.getTime() + 10*1000)
-            var miliseconds = (timeObject - gmtTimestamp)
+            var miliseconds = Math.abs(timeObject - gmtTimestamp)
             const minutes = Math.floor((miliseconds/1000)/60)
             setNextGameStartAt(miliseconds)
             setNextGameTime(miliseconds/1000)
@@ -183,8 +184,15 @@ function Home() {
         console.log(nextGameTime);
         if(nextGameTime !== null && nextGameTime > 8){
             const interval = setTimeout(() => {
-                var time = nextGameTime -1;
-                setNextGameTime(time);
+                if(nextGameTime > 0)
+                {
+                    var time = nextGameTime -1;
+                    setNextGameTime(time);
+                }
+                else if(nextGameTime < 0){
+                    var time = nextGameTime +1;
+                    setNextGameTime(time);
+                }
             }, 1000);
             return () => clearTimeout(interval);
         }
@@ -217,7 +225,9 @@ function Home() {
     const LoadingScreen = () => {
         return(
         <div className="body">
-            <div className="logo">AL-Betting</div>
+            <div className="logo">
+                AL-Betting
+            </div>
             <div className="loadingwrapper">
                 <div class="playtext">Let's play</div>
                 <span style={{'--i':1}} className="upperspan">
@@ -262,7 +272,19 @@ function Home() {
             <section className="child_anim">
                 <div className="rnd">
                     
-                    <div className="logo">AL-Betting</div>
+                    <div className="logo">AL-Betting<button onClick={() =>{
+                        const time_array = nextGame.started_at.split('Z')[0].split("T")
+                        const next_datetime = new Date(time_array[0]+" "+time_array[1])
+                        
+                        const utcTimestamp = new Date()
+                        const gmtTimestamp = utcTimestamp.setHours(utcTimestamp.getHours() - 3)
+            
+                        let timeObject = new Date(next_datetime.getTime() + 10*1000)
+                        var miliseconds = Math.abs(timeObject - gmtTimestamp)
+                        const minutes = Math.floor((miliseconds/1000)/60)
+                        console.log(gmtTimestamp.toLocaleString());
+                        console.log(timeObject);
+                    }}>Get</button></div>
                     {/* {
                         isReady && (
                             <div style={{color: 'white', fontSize: 50}}>Is Ready ....</div>
@@ -282,12 +304,12 @@ function Home() {
                             <span style={{"--i":3}}>{currentDrawNumber}</span>
                         </div>
                     </div>
-                    <div className="gamenumber">
-                        <div className="title">DRAWING GAME</div>
+                    <div className="gamenumber" >
+                        <div className="title">DRAWING GAME  &nbsp;</div>
                         <h1 className="cntdwn">{currentGame !==null ? currentGame.game_number: null}</h1>
                     </div>
                     <div className="nextgame">
-                        <div className="title">NEXT GAME</div>
+                        <div className="title">NEXT GAME {nextGame !==null ? nextGame.game_number: null}</div>
                         <div className="cntdwn">
                             {Math.floor(nextGameTime/60)}:{ Math.floor(nextGameTime%60)}
                         </div>
